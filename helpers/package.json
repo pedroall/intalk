@@ -1,0 +1,16 @@
+{
+  "name": "@intalk/helpers",
+  "version": "0.0.1",
+  "description": "Intalk Helpers",
+  "main": "dist/helpers.js",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "bson": "^6.8.0"
+  }
+}

@@ -3,7 +3,8 @@
   "license": "AGPL",
   "workspaces": [
     "helpers",
-    "models"
+    "models",
+    "defaults"
   ],
   "tsconfig": "*"
 }

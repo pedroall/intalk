@@ -2,7 +2,7 @@ import { Model } from 'mongoose'
 import { ObjectId, ObjectIdLike } from 'bson'
 
 import { DatabaseError } from './DatabaseError'
-import { parseId, parseSecret } from '@intalk/helpers'
+import { parseId, parseSecret, parseContent, If } from '@intalk/helpers'
 
 import { UserModel, UserModelData } from './UserModel'
 import { MessageSchemaInterface } from './schemas'
@@ -10,12 +10,14 @@ import { MessageSchemaInterface } from './schemas'
 export enum MessageErrors {
     InvalidId,
     InvalidUserId,
-    InvalidContent,
 
     Unauthorized,
 }
 
-const { InvalidId, InvalidUserId, InvalidContent, Unauthorized } =
+export type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null>
+export type ContentFetched<F extends boolean> = If<F, string, string | null>
+
+const { InvalidId, InvalidUserId, Unauthorized } =
     MessageErrors
 
 export class MessageError extends DatabaseError<MessageErrors> {
@@ -33,10 +35,10 @@ export interface MessageModelData {
     timestamp?: Date
 }
 
-export class MessageModel {
-    id: ObjectId | null
-    userId: ObjectId | null
-    content: string | null
+export class MessageModel<F extends boolean = false> {
+    id: IdFetched<F> 
+    userId: IdFetched<F>
+    content: ContentFetched<F>
 
     constructor(
         public Message: Model<MessageSchemaInterface>,
@@ -44,66 +46,64 @@ export class MessageModel {
 
         { id = null, userId = null, content = null }: MessageModelData
     ) {
-        if (id && !isValidOid(id)) throw error(InvalidId)
-        if (userId && !isValidOid(userId)) throw error(InvalidUserId)
-
-        if (content && (content.length < 8 || content.length > 512))
-            throw error(InvalidContent)
-
-        if(userId) this.userId = new ObjectId(userId)
-        else this.userId = null
-
-        if (id) this.id = new ObjectId(id)
-        else this.id = null
-
-        this.content = content
+        try {
+            this.id = parseId(id)
+        } catch(_) {
+            this.id = null as IdFetched<F>
+        }
+        try {
+            this.userId = parseId(userId)
+        } catch(_) {
+            this.userId = null as IdFetched<F>
+        }
+        try {
+            this.content = parseContent(content)
+        } catch(_) {
+            this.content = null as ContentFetched<F>
+        }
     }
 
     async fetch() {
         const { Message, id } = this
 
-        if (!id) throw error(InvalidId)
-        if (!isValidOid(id)) throw error(InvalidId)
-
-        const message = await Message.findById(id)
+        const parsedId = parseId(id)
+        const message = await Message.findById(parsedId)
 
         if(!message) throw error(InvalidId)
 
         this.content = message.content
         this.userId = new ObjectId(message.user)
 
-        return this
+        return this as MessageModel<true>
     }
 
-    async post(secret: string) {
+    async post(target: UserModel<true>, secret: string) {
         const { Message, User, userId, content } = this
 
-        if (!userId || !isValidOid(userId)) throw error(InvalidUserId)
-
-        if (!validateSecret(secret)) throw error(Unauthorized)
-        if (!content || content.length < 8 || content.length > 512)
-            throw error(InvalidContent)
+        const parsedUserId = parseId(userId)
+        const parsedSecret = parseSecret(secret)
+        const parsedContent = parseContent(content)
 
         const user = new User({
-            id: userId,
-            secret
+            id: parsedUserId,
+            secret: parsedSecret
         })
 
-        await user.fetch()
+        const userFetched = await user.fetch()
 
-        if (user.deleted) throw error(InvalidUserId)
+        if (userFetched.deleted) throw error(InvalidUserId)
 
-        if (secret != user.secret) throw error(Unauthorized)
+        if (parsedSecret != userFetched.secret) throw error(Unauthorized)
 
         const message = await Message.create({
-            content,
-            user: userId
+            content: parsedContent,
+            user: parsedUserId
         })
 
         this.id = message.id
 
+        await target.linkMessage(this as MessageModel<true>)
 
-
-        return this
+        return this as MessageModel<true>
     }
 }

@@ -1,13 +1,12 @@
 import { Model } from 'mongoose'
 import { DatabaseError } from './DatabaseError'
-import { parseId, parseSecret } from '@intalk/helpers'
+import { parseId, parseSecret, If } from '@intalk/helpers'
 import { ObjectId, ObjectIdLike } from 'bson'
 import { UserSchemaInterface } from './schemas'
+import { MessageModel } from './MessageModel'
 
-export type Fetched<F extends boolean, A, B> = F extends true ? A : B
-
-export type IdFetched<F extends boolean> = Fetched<F, ObjectId, ObjectId | null >
-export type deleteFetched<F extends boolean> = Fetched<F, false, true>
+export type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null >
+export type deleteFetched<F extends boolean> = If<F, false, true>
 
 export enum UserErrorCodes {
     Unauthorized,
@@ -63,7 +62,7 @@ export class UserModel<F extends boolean = false> {
 
         if (!user) {
             this.deleted = true as deleteFetched<F>
-            return this as UserModel<false>
+            throw error(InvalidId)
         } else {
             this.deleted = false as deleteFetched<F>
             return this as UserModel<true>
@@ -121,5 +120,26 @@ export class UserModel<F extends boolean = false> {
         this.deleted = user.acknowledged as deleteFetched<F>
 
         return this as UserModel<false>
+    }
+
+    async linkMessage(message: MessageModel<true>) {
+        const { User, id, secret } = this
+
+        const parsedId = parseId(id)
+        const parsedMessageId = parseId(message.id)
+        const parsedSecret = parseSecret(secret)
+
+        const user = await User.findOne({
+            _id: parsedId,
+            secret: parsedSecret
+        })
+ 
+        if(!user) throw error(InvalidCredentials)
+
+        user.messages.push(parsedMessageId.toString())
+
+        await user.save()
+
+        return this as UserModel<true>
     }
 }

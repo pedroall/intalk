@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose'
 
-import { validateSecret } from '@intalk/helpers'
+import { parseSecret } from '@intalk/helpers'
 
 export interface UserSchemaInterface {
     secret: string
@@ -18,7 +18,14 @@ export const UserSchema = new Schema<UserSchemaInterface>({
         min: 0,
         max: 512,
         validate: {
-            validator: validateSecret,
+            validator: (secret) => {
+                try {
+                    parseSecret(secret)
+                    return true
+                } catch(_) {
+                    return false
+                }
+            },
             message: () => 'invalid'
         }
     },

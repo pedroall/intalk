@@ -65,7 +65,9 @@ describe('Test message model', () => {
         message.content = 'Hello, world!'
         message.userId = user.id
 
-        await message.post(newSecret)
+        const fetchedUser = await user.fetch()
+
+        await message.post(fetchedUser, newSecret)
     })
     it('Test message fetch', async () => {
         const toFetch = new database.Message({

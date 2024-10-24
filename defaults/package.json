@@ -1,0 +1,19 @@
+{
+  "name": "@intalk/defaults",
+  "version": "0.02",
+  "description": "Intalk default types and files",
+  "main": "dist/defaults.js",
+  "repository": "https://github.com/pedroall/intalk",
+  "author": "pedroall",
+  "license": "AGPL-3.0-only",
+  "private": false,
+  "devDependencies": {
+    "@types/node": "^22.7.9"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "bin": {
+      "defaults": "./cli/script.js"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@intalk/defaults",
-  "version": "0.02",
+  "version": "0.0.2",
   "description": "Intalk default types and files",
   "main": "dist/defaults.js",
   "repository": "https://github.com/pedroall/intalk",
@@ -10,10 +10,18 @@
   "devDependencies": {
     "@types/node": "^22.7.9"
   },
+  "scripts": {
+    "test": "jest",
+    "bootstrap": "yarn -s unlink @intalk/defaults && yarn unlink -s && yarn link && yarn link @intalk/defaults"
+  },
   "dependencies": {
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "ruxy": "^0.0.3",
     "ts-node": "^10.9.2"
   },
   "bin": {
-      "defaults": "./cli/script.js"
+    "defaults": "./cli/cli.js"
   }
 }

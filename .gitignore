@@ -19,3 +19,9 @@ helpers/package-lock.json
 helpers/yarn.lock
 helpers/node_modules
 helpers/todo.txt
+
+defaults/node_modules
+defaults/yarn.lock
+defaults/package-lock.json
+defaults/dist
+defaults/test-defaults

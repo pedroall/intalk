@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { tsconfig, prettier, babel, jest } = require('./handler')
+const { tsconfig, prettier, babel, jest, help } = require('./handler')
 
 const command = process.argv[2]
 const dir = process.argv[3]
@@ -17,6 +17,9 @@ switch(command) {
         break
     case 'jest':
         jest(dir)
+        break
+    case 'help':
+        help()
         break
     default:
         console.log('Unknown command')

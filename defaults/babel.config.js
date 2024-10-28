@@ -1,1 +1,1 @@
-module.exports = require('./defaults/babel-base.config.js')
+module.exports = require('./.defaults/base-babel.config.js')

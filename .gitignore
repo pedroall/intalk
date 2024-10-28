@@ -25,3 +25,4 @@ defaults/yarn.lock
 defaults/package-lock.json
 defaults/dist
 defaults/test-defaults
+defaults/.test-defaults

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const basePath = (dir = 'defaults') => path.join(process.cwd(), dir)
+const basePath = (dir = '.defaults') => path.join(process.cwd(), dir)
 const pathToWrite = (file, dir = basePath()) => path.join(dir, file)
 
 const filesPath = path.join(path.resolve(__dirname, '../files'))
@@ -28,18 +28,31 @@ function tsconfig(dir) {
 }
 
 function prettier(dir) {
-    copyFileToProject('prettier.config.js', 'prettier-base.config.js', dir)
+    copyFileToProject('prettier.config.js', 'base-prettier.config.js', dir)
     console.log('Created local prettier-base')
 }
 
 function babel(dir) {
-    copyFileToProject('babel.config.js', 'babel-base.config.js', dir)
+    copyFileToProject('babel.config.js', 'base-babel.config.js', dir)
     console.log('Created local babel-base')
 }
 
 function jest(dir) {
-    copyFileToProject('jest.config.js', 'jest-base.config.js', dir)
+    copyFileToProject('jest.config.js', 'base-jest.config.js', dir)
     console.log('Created local jest-base')
+}
+
+function help() {
+    const txt = helpTxt()
+    console.log(txt)
+}
+
+function helpTxt() {
+    const txt = fs.readFileSync(
+        path.join(__dirname, 'docs/help.txt')
+    ).toString()
+
+    return txt
 }
 
 module.exports = {
@@ -47,8 +60,10 @@ module.exports = {
     prettier,
     babel,
     jest,
+    help,
 
     readBaseFile,
     basePath,
-    pathToWrite
+    pathToWrite,
+    helpTxt
 }

@@ -1,0 +1,15 @@
+[HELP]
+(npx|yarn)? defaults <command> <dir?>
+
+[COMMANDS]
+----ARGS
+    ----<dir?> = Directory for the base file (default is .defaults)
+    • tsconfig <dir?>
+
+    ---- Generates a base tsconfig file
+    • prettier <dir?>
+    ---- Generates a base prettier file
+    • babel <dir?>
+    ---- Generates a base babel file
+    • jest <dir?>
+    ---- Generates a base jest file

@@ -1,17 +1,17 @@
-import { ObjectId, ObjectIdLike } from 'bson'
+import { ObjectId } from 'bson'
 
 export type If<V extends boolean, A, B> = V extends true ? A : B
 
-export function parseId(id: ObjectIdLike | void | null): ObjectId {
+export function parseId(id: any): ObjectId {
     if (!id) throw new TypeError('No id received')
 
     const isValid = ObjectId.isValid(id)
 
     if (!isValid) throw new TypeError('Invalid ObjectId')
-    return new ObjectId(id)
+    return ObjectId.createFromHexString(id)
 }
 
-export function parseSecret(secret: string | void | null): string {
+export function parseSecret(secret: any) {
     if (!secret) throw new TypeError('Invalid secret type')
 
     const tested = parseSecret.regexp.test(secret)
@@ -20,7 +20,7 @@ export function parseSecret(secret: string | void | null): string {
     return secret
 }
 
-export function parseContent(content: string | void | null): string {
+export function parseContent(content: any): string {
     if (!content) throw TypeError('No content received')
 
     if (content.length == 0 || content.length > 512)

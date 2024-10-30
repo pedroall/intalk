@@ -1,5 +1,5 @@
 {
-    "extends": "./.defaults/base-tsconfig.json"
+    "extends": "./.defaults/base-tsconfig.json",
     "compilerOptions": {
         "declaration": true
     }

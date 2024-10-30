@@ -6,6 +6,13 @@ const pathToWrite = (file, dir = basePath()) => path.join(dir, file)
 
 const filesPath = path.join(path.resolve(__dirname, '../files'))
 
+const FileNames = {
+    tsconfig: 'base-tsconfig.json',
+    prettier: 'base-prettier.config.js',
+    babel: 'base-babel.config.js',
+    jest: 'base-jest.config.js'
+}
+
 function readBaseFile(baseFile) {
     return fs.readFileSync(path.join(filesPath, baseFile))
 }
@@ -22,23 +29,24 @@ function copyFileToProject(baseFile, newFile, dir) {
     fs.writeFileSync(pathToWrite(newFile, defaultsPath), data)
 }
 
+
 function tsconfig(dir) {
-    copyFileToProject('tsconfig.json', 'base-tsconfig.json', dir)
+    copyFileToProject('tsconfig.json', FileNames.tsconfig, dir)
     console.log('Created local tsconfig-base')
 }
 
 function prettier(dir) {
-    copyFileToProject('prettier.config.js', 'base-prettier.config.js', dir)
+    copyFileToProject('prettier.config.js', FileNames.prettier, dir)
     console.log('Created local prettier-base')
 }
 
 function babel(dir) {
-    copyFileToProject('babel.config.js', 'base-babel.config.js', dir)
+    copyFileToProject('babel.config.js', FileNames.babel, dir)
     console.log('Created local babel-base')
 }
 
 function jest(dir) {
-    copyFileToProject('jest.config.js', 'base-jest.config.js', dir)
+    copyFileToProject('jest.config.js', FileNames.jest, dir)
     console.log('Created local jest-base')
 }
 
@@ -55,12 +63,39 @@ function helpTxt() {
     return txt
 }
 
+function update() {
+    const currentFiles = fs.readdirSync(basePath())
+
+    if(!currentFiles.length)
+        return console.log('Nothing to update')
+
+    for(file of currentFiles) {
+        switch(file) {
+            case FileNames.tsconfig:
+                tsconfig()
+                break
+               case FileNames.prettier:
+                prettier()
+                break
+            case FileNames.babel:
+                babel()
+                break
+            case FileNames.jest:
+                jest()
+                break
+            default:
+                throw new Error(`Unknown file ${file} in ${basePath()} dir`)
+        }
+    }
+}
+
 module.exports = {
     tsconfig,
     prettier,
     babel,
     jest,
     help,
+    update,
 
     readBaseFile,
     basePath,

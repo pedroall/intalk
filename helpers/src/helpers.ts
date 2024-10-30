@@ -6,7 +6,6 @@ export function parseId(id: any): ObjectId {
     if (!id) throw new TypeError('No id received')
 
     const isValid = ObjectId.isValid(id)
-
     if (!isValid) throw new TypeError('Invalid ObjectId')
     return ObjectId.createFromHexString(id)
 }

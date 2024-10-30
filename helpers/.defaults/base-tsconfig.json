@@ -1,11 +1,13 @@
 {
+    "exclude": ["../tests"],
     "compilerOptions": {
         "strict": true,
-        "module": "ESNext",
+        "module": "CommonJS",
         "moduleResolution": "node",
         "forceConsistentCasingInFileNames": true,
         "esModuleInterop": true,
-        "outDir": "dist",
-        "rootDir": "src"
+        "outDir": "../dist",
+        "rootDir": "../src",
+        "noEmitOnError": true
     }
 }

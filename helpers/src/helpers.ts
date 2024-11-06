@@ -14,8 +14,9 @@ export function parseSecret(secret: any) {
     if (!secret) throw new TypeError('Invalid secret type')
 
     const tested = parseSecret.regexp.test(secret)
-
+    
     if (!tested) throw new Error('Invalid secret')
+
     return secret
 }
 

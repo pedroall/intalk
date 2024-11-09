@@ -39,7 +39,7 @@ export class UserModel<F extends boolean = false> {
         public User: Model<UserSchemaInterface>,
 
         {
-            id,
+            id = null,
             secret = null,
             deleted = true,
         } : UserModelData

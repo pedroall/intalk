@@ -1,6 +1,6 @@
 {
   "name": "@intalk/defaults",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Intalk default types and files",
   "main": "dist/defaults.js",
   "repository": "https://github.com/pedroall/intalk",
@@ -8,7 +8,8 @@
   "license": "AGPL-3.0-only",
   "private": false,
   "devDependencies": {
-    "@types/node": "^22.7.9"
+    "@types/node": "^22.7.9",
+    "prettier": "^3.3.3"
   },
   "scripts": {
     "test": "jest",

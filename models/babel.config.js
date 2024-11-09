@@ -1,6 +1,3 @@
-module.exports = {
-  presets: [
-    ['@babel/preset-env', {targets: {node: 'current'}}],
-    '@babel/preset-typescript',
-  ],
-};
+const config = require('./.defaults/base-babel.config.js')
+
+module.exports = config

@@ -1,6 +1,3 @@
-module.exports = {
-    testEnvironment: 'node',
-    transform: {
-        '^.+.tsx?$': ['babel-jest'],
-    },
-}
+const config = require('./.defaults/base-jest.config')
+
+module.exports = config

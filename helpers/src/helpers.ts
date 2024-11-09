@@ -7,7 +7,7 @@ export function parseId(id: any): ObjectId {
 
     const isValid = ObjectId.isValid(id)
     if (!isValid) throw new TypeError('Invalid ObjectId')
-    return ObjectId.createFromHexString(id)
+    return ObjectId.createFromHexString(id.toString())
 }
 
 export function parseSecret(secret: any) {

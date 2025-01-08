@@ -13,7 +13,8 @@
   },
   "scripts": {
     "test": "jest",
-    "bootstrap": "yarn -s unlink @intalk/defaults && yarn unlink -s && yarn link && yarn link @intalk/defaults"
+    "bootstrap": "yarn -s unlink @intalk/defaults && yarn unlink -s && yarn link && yarn link @intalk/defaults",
+    "build": "rm -rf dist && tsc"
   },
   "dependencies": {
     "@babel/node": "^7.26.0",

@@ -14,7 +14,7 @@ export enum MessageErrors {
     Unauthorized,
 }
 
-export type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null>
+type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null>
 export type ContentFetched<F extends boolean> = If<F, string, string | null>
 
 const { InvalidId, InvalidUserId, Unauthorized } =

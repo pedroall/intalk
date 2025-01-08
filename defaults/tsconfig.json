@@ -1,0 +1,4 @@
+{
+    "extends": "./.defaults/base-tsconfig.json",
+    "exclude": ["files", "cli", "tests"]
+}

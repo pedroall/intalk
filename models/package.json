@@ -1,12 +1,14 @@
 {
   "name": "@intalk/models",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Database Models",
-  "main": "dist/models.js",
+  "main": "dist/index.js",
   "license": "AGPL-3.0-only",
   "scripts": {
-    "build": "tsc",
-    "test": "jest"
+    "build": "rm -rf dist && tsc",
+    "test": "jest",
+    "startdb": "mongod --dbpath ./db --fork --syslog",
+    "bootstrap": "yarn -s unlink @intalk/models && yarn unlink -s && yarn link && yarn link @intalk/models"
   },
   "devDependencies": {
     "@babel/node": "^7.25.7",
@@ -18,10 +20,13 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@intalk/helpers": "*",
     "@intalk/defaults": "*",
+    "@intalk/helpers": "*",
     "bson": "^6.8.0",
     "dotenv": "^16.4.5",
-    "mongoose": "^8.7.1"
+    "mongoose": "^8.8.2"
+  },
+  "bin": {
+      "models": "./cli/cli.js"
   }
 }

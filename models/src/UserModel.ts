@@ -5,7 +5,7 @@ import { ObjectId, ObjectIdLike } from 'bson'
 import { UserSchemaInterface } from './schemas'
 import { MessageModel } from './MessageModel'
 
-export type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null >
+type IdFetched<F extends boolean> = If<F, ObjectId, ObjectId | null >
 export type deleteFetched<F extends boolean> = If<F, false, true>
 
 export enum UserErrorCodes {
@@ -25,7 +25,7 @@ const error = UserError.error
 export const { Unauthorized, InvalidId, InvalidCredentials } = UserErrorCodes
 
 export interface UserModelData {
-    id?: ObjectIdLike | null,
+    id?: ObjectIdLike | string | null,
     secret?: string | null,
     deleted?: boolean,
 }

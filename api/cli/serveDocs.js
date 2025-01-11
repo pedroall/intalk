@@ -5,7 +5,7 @@ const path = require('node:path')
 
 const marked = require('marked')
 
-const defaultPort = Number(process.env['PORT']) || 3000
+const defaultPort = Number(process.env['PORT']) || 3333
 
 class DocsServer extends Koa {
     constructor() {

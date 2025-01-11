@@ -27,3 +27,6 @@ defaults/dist
 defaults/test-defaults
 defaults/.test-defaults
 defaults/.defaults
+
+api/dist/
+api/.defaults

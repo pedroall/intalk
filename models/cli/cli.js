@@ -19,6 +19,7 @@ async function main() {
                 '--syslog',
             ])
             await context.run()
+            console.log(context.stdout)
             console.log('Mongo database started.')
     }
 }

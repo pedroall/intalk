@@ -78,5 +78,5 @@ afterAll(async() => {
         }
     })
 
-    console.log(`Deleted user ${user.id} for this test suit...`)
+    console.log(`Deleting user ${user.id} for this test suit...`)
 })

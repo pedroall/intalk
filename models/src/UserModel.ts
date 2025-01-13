@@ -11,7 +11,8 @@ export type deleteFetched<F extends boolean> = If<F, false, true>
 export enum UserErrorCodes {
     Unauthorized,
     InvalidId,
-    InvalidCredentials
+    InvalidCredentials,
+    Deleted
 }
 
 export class UserError extends DatabaseError<UserErrorCodes> {
@@ -22,7 +23,7 @@ export class UserError extends DatabaseError<UserErrorCodes> {
 
 const error = UserError.error
 
-export const { Unauthorized, InvalidId, InvalidCredentials } = UserErrorCodes
+export const { Unauthorized, InvalidId, InvalidCredentials, Deleted } = UserErrorCodes
 
 export interface UserModelData {
     id?: ObjectIdLike | string | null,
@@ -62,7 +63,7 @@ export class UserModel<F extends boolean = false> {
 
         if (!user) {
             this.deleted = true as deleteFetched<F>
-            throw error(InvalidId)
+            throw error(Deleted)
         } else {
             this.deleted = false as deleteFetched<F>
             return this as UserModel<true>

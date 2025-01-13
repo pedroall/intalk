@@ -19,7 +19,7 @@ export class UserRouter extends Router {
             try {
                 parseId(id)
             } catch (error) {
-                ctx.status = 406
+                ctx.status = 412
                 return
             }
 
@@ -39,20 +39,25 @@ export class UserRouter extends Router {
                 ctx.body = {
                     id: fetched.id,
                 }
+                return
+
             } catch (error) {
                 if (error instanceof DatabaseError) {
                     if (error.code == UserErrorCodes.InvalidId) {
                         ctx.status = 412
                         return
                     }
+                    if(error.code == UserErrorCodes.Deleted) {
+                        ctx.status = 410
+                        return
+                    }
 
+                    ctx.status = 500
                     return console.error(error)
                 }
 
                 return console.error(error)
             }
-            ctx.status = 500
-            return
         })
     }
 

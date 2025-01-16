@@ -2,6 +2,37 @@ import Router from '@koa/router'
 import { DatabaseManager, DatabaseError, UserErrorCodes } from '@intalk/models'
 import { parseId, parseSecret } from '@intalk/helpers'
 
+type authTypes = 'Basic'
+const parseAuthType: (value: any) => authTypes = (value: string) => {
+    if(typeof value != 'string') {
+        throw new Error('AuthType must be an string.')
+    }
+    if(value != 'Basic') {
+        throw new Error('Onlt Basic authorization type is allowrd.')
+    }
+
+    return value as authTypes
+}
+const parseAuthorizationHeader: (rawHeader?: string | string[]) => [authTypes, string] = (rawHeader?: string | string[]) => {
+    if(!rawHeader)
+        throw new Error('No Authorization provided.')
+    const split = Array.isArray(rawHeader) ? rawHeader : rawHeader.split(' ')
+    if(split.length != 2) {
+        throw new Error('Authorization header must contain only two fields: authType, secret.')
+    }
+
+    const authType: authTypes = parseAuthType(split.shift())
+    const secret = split.shift()
+
+    if(!secret) {
+        throw new Error('No secret provided.')
+    }
+
+    parseSecret(secret)
+
+    return [authType, secret]
+}
+
 export class UserRouter extends Router {
     constructor(public db: DatabaseManager) {
         super()
@@ -64,29 +95,12 @@ export class UserRouter extends Router {
     postUser() {
         const User = this.db.User
         this.post('/users', async (ctx) => {
-            const secretHeader = ctx.headers.authorization
-            if (!secretHeader) {
-                ctx.status = 401
-                return
-            }
-            const secretHeaderSplit = secretHeader.split(' ')
+            const authorizationHeader = ctx.headers.authorization
 
-            if (secretHeaderSplit.length < 2) {
-                ctx.status = 401
-                return
-            }
-
-            const authType = secretHeaderSplit.shift()
-            const secret = secretHeaderSplit.shift()
-
-            if (authType != 'Basic') {
-                ctx.status = 401
-                return
-            }
-
+            let  secret: string
             try {
-                parseSecret(secret)
-            } catch (_) {
+                [, secret] = parseAuthorizationHeader(authorizationHeader)
+            } catch(_) {
                 ctx.status = 401
                 return
             }
@@ -118,25 +132,16 @@ export class UserRouter extends Router {
             try {
                 parseId(id)
             } catch (_) {
-                ctx.status = 406
+                ctx.status = 412
                 return
             }
 
-            const secretHeader = ctx.headers.authorization
-            if (!secretHeader) {
-                ctx.status = 401
-                return
-            }
-            const secretHeaderSplit = secretHeader.split(' ')
-            if (secretHeaderSplit.length < 2) {
-                ctx.status = 401
-                return
-            }
+            const authorizationHeader = ctx.headers.authorization
+            let secret: string
 
-            const authType = secretHeaderSplit.shift()
-            const secret = secretHeaderSplit.shift()
-
-            if (authType != 'Basic') {
+            try {
+                [, secret] = parseAuthorizationHeader(authorizationHeader)
+            } catch(_) {
                 ctx.status = 401
                 return
             }
